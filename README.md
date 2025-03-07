@@ -22,7 +22,7 @@ By the end of this project, you will:
 3. Basic Knowledge:
 * Familiarity with Linux commands and Vagrant basics.
 
-## Cluster Architecture
+# Cluster Architecture
 
 1. Cluster Components:
 
@@ -45,9 +45,9 @@ By the end of this project, you will:
                  ```
 
 
-## Step-by-step Implementation
+# Step-by-step Implementation
 
-### Step 1: Initialize the Project
+## Step 1: Initialize the Project
 
 * Create a Project Directory:
 
@@ -65,7 +65,7 @@ This creates a default ```Vagrantfile
                        ```
                        in the directory.
 
-### Step 2: Configure the Vagrantfile
+## Step 2: Configure the Vagrantfile
 
 * Open the Vagrantfile in your text editor:
 
@@ -125,7 +125,7 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-### Step 3: Bring Up the Cluster
+## Step 3: Bring Up the Cluster
 
 1. Start the Cluster:
 
@@ -151,14 +151,13 @@ You should see ```load_balancer,
                ```
                state.
 
-![alt text](Image/Varification%20of%20Vms-running.png)
 
 
 You can also view the status from the virtual box interface:
 
-![alt text](Image/Oracle%20Vm%20Box%20Manger.png)
+![alt text](Image/OracleVm%20Box-Manager.png)
                
-### Step 4: Configure the Cluster Components 
+## Step 4: Configure the Cluster Components 
 
 1. Load Balancer Configuration
 
@@ -324,7 +323,7 @@ sudo systemctl restart mysql
 sudo systemctl status mysql
 ```
 
-![alt text](Image/mysql-db.png)
+![alt text](Image/mysql-status.png)
 
 * Create a database and user:
 
@@ -335,4 +334,75 @@ CREATE USER 'clusteruser'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON clusterdb.* TO 'clusteruser'@'%';
 FLUSH PRIVILEGES;"
 ```
+### Step 5: Test the Cluster
+
+1. Test Load Balancer:
+
+* Access the load balancer from your host machine’s browser:
+
+```
+http://192.168.56.100
+```
+Refresh the page to see traffic alternating between app servers.
+
+![alt text](Image/app-server1.png)
+
+![alt text](Image/app-server2.png)
+
+
+2. Test Application-to-Database Communication:
+
+* SSH into an app server (e.g.,  ```app1
+                               ```
+):
+
+```
+vagrant ssh app1
+```
+
+* Install MySQL client:
+
+```
+sudo apt install -y mysql-client
+```
+
+* Connect to the database server:
+
+```
+mysql -h 192.168.56.110 -u clusteruser -p
+```
+
+```
+(Use `password` as the password.)
+```
+### Step 6: Scale the Cluster (Optional)
+
+1. Add Additional App Servers:
+
+* Duplicate the ```app2    
+                ```
+ block in the  
+              ```Vagrantfile  
+              ```
+and update the name, hostname, and IP.
+
+* Re-provision:
+
+```
+vagrant reload --provision
+```
+
+# Wrapping Up
+
+This project so far reflects the core principles of modern infrastructure: iterative improvement, resource efficiency, and seamless orchestration. From single VM setups to robust cluster simulations, you’ve gained hands-on experience with concepts foundational to DevOps, cloud computing, and system scalability. As you move forward, these skills set the stage for exploring advanced technologies like Docker, Kubernetes, and cloud-based architectures, empowering you to design, deploy, and optimize production-grade systems with confidence. Bravo!🚀
+
+## Cleanup:
+
+* To free up resources, destroy all VMs:
+
+```
+vagrant destroy -f
+```
+
+Project Completed! 🚀
 
